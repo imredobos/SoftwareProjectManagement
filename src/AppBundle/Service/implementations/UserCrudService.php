@@ -24,10 +24,73 @@ class UserCrudService extends CrudService implements IUserCrudService
     }
 
     /**
+     * @inheritDoc
+     */
+    public function count()
+    {
+        $query = $this->em->createQuery("SELECT count(u) FROM AppBundle:User u");
+        return $query->getResult();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function delete($userId)
+    {
+        if ($this->exists($userId)) {
+            $user = $this->find($userId);
+            $this->em->remove($user);
+            $this->em->flush();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function exists($userId)
+    {
+        $user = $this->find($userId);
+        return ($user) ? true : false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function find($userId)
+    {
+        return $this->getRepo()->find($userId);
+    }
+
+    /**
      * @return EntityRepository
      */
     public function getRepo()
     {
         return $this->em->getRepository(User::class);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAll()
+    {
+        return $this->getRepo()->findAll();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function save($user)
+    {
+        $this->em->persist($user);
+        $this->em->flush();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUserForm($user)
+    {
+        // TODO: Implement getUserForm() method.
     }
 }

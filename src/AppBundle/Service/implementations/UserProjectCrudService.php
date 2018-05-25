@@ -24,10 +24,73 @@ class UserProjectCrudService extends CrudService implements IUserProjectCrudServ
     }
 
     /**
+     * @inheritDoc
+     */
+    public function count()
+    {
+        $query = $this->em->createQuery("SELECT count(up) FROM AppBundle:UserProject up");
+        return $query->getResult();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function delete($userprojectId)
+    {
+        if ($this->exists($userprojectId)) {
+            $userproject = $this->find($userprojectId);
+            $this->em->remove($userproject);
+            $this->em->flush();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function exists($userprojectId)
+    {
+        $userproject = $this->find($userprojectId);
+        return ($userproject) ? true : false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function find($userprojectId)
+    {
+        return $this->getRepo()->find($userprojectId);
+    }
+
+    /**
      * @return EntityRepository
      */
     public function getRepo()
     {
         return $this->em->getRepository(UserProject::class);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAll()
+    {
+        return $this->getRepo()->findAll();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function save($userproject)
+    {
+        $this->em->persist($userproject);
+        $this->em->flush();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUserProjectForm($userproject)
+    {
+        // TODO: Implement getUserProjectForm() method.
     }
 }

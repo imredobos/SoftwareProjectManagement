@@ -24,10 +24,75 @@ class TicketCrudService extends CrudService implements ITicketCrudService
     }
 
     /**
+     * @inheritDoc
+     */
+    public function count()
+    {
+        $query = $this->em->createQuery("SELECT count(t) FROM AppBundle:Ticket t");
+        return $query->getResult();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function delete($ticketId)
+    {
+        if ($this->exists($ticketId)) {
+            $ticket = $this->find($ticketId);
+            $this->em->remove($ticket);
+            $this->em->flush();
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function exists($ticketId)
+    {
+        $ticket = $this->find($ticketId);
+        return ($ticket) ? true : false;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function find($ticketId)
+    {
+        return $this->getRepo()->find($ticketId);
+    }
+
+    /**
      * @return EntityRepository
      */
     public function getRepo()
     {
         return $this->em->getRepository(Ticket::class);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAll()
+    {
+        return $this->getRepo()->findAll();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function save($ticket)
+    {
+        $this->em->persist($ticket);
+        $this->em->flush();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTicketForm($ticket)
+    {
+        // TODO: Implement getTicketForm() method.
+    }
+
+
 }

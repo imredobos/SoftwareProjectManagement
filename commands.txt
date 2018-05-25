@@ -1,0 +1,4 @@
+\xampp\php\php bin/console doctrine:schema:drop --force --full-database
+\xampp\php\php bin/console doctrine:database:create
+\xampp\php\php bin/console doctrine:schema:update --force
+\xampp\php\php bin/console doctrine:fixtures:load --no-interaction -vvv

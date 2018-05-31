@@ -31,7 +31,7 @@ class Project
     private $project_startdate;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $project_enddate;
 

@@ -15,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity
  * @ORM\Table(name="users")
+ * @ORM\HasLifecycleCallbacks
  */
 class User implements UserInterface, \Serializable
 {
@@ -58,7 +59,7 @@ class User implements UserInterface, \Serializable
     private $user_project;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Ticket", inversedBy="ticket_assignee")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="ticket_assignee")
      * @ORM\JoinColumn(name="user_ticket", referencedColumnName="ticket_id")
      */
     private $user_ticket;
@@ -331,5 +332,17 @@ class User implements UserInterface, \Serializable
         $this->user_ticket = $userTicket;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updateTimestamp()
+    {
+        if ($this->user_registered == null)
+        {
+            $this->user_registered = new \DateTime();
+        }
     }
 }

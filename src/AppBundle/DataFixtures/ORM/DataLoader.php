@@ -3,6 +3,8 @@ namespace AppBundle\DataFixtures\ORM;
 
 use AppBundle\Entity\Brand;
 use AppBundle\Entity\Car;
+use AppBundle\Entity\Project;
+use AppBundle\Entity\Ticket;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -37,58 +39,15 @@ class DataLoader extends Fixture implements  FixtureInterface, ContainerAwareInt
         $echoLogger = new EchoSQLLogger();
         $this->em->getConnection()->getConfiguration()->setSQLLogger($stackLogger);
 
-        $bmw = new Brand();
-        $bmw->setBrandName("BMW");
-        $this->em->persist($bmw);
-
-        $audi = new Brand();
-        $audi->setBrandName("AUDI");
-        $this->em->persist($audi);
-
-        $citroen = new Brand();
-        $citroen->setBrandName("CITROEN");
-        $this->em->persist($citroen);
-        $this->em->flush();
-        //echo "\nBRANDS OK. QUERIES: ".count($stackLogger->queries);
-
-        $car = new Car();
-        $car->setCarBrand($bmw);
-        $car->setCarModel("116i");
-        $car->setCarVisible(true);
-        $car->setCarPrice(12345);
-        $this->em->persist($car);
-        $this->em->flush();
-        //echo "\nCAR OK. QUERIES: ".count($stackLogger->queries);
-        //echo "\n\n";
-
-        $oneCar = $this->em->getRepository(Car::class)->
-            findOneBy(['car_model'=>"116i"]);
-        $oneCar->setCarPrice(22222);
-        $this->em->persist($oneCar);
-        $this->em->flush();
-        //echo "\nMOD OK. QUERIES: ".count($stackLogger->queries);
-        //echo "\nPRICE IS: ".
-          $this->em->getRepository(Car::class)->find(1)->getCarPrice();
-        //echo "\n\n";
-
-        //echo "NUMBER OF CARS FOR BMW\n";
-        //echo $bmw->getBrandCars()->count()."\n"; // PROXY CLASSES
-        //echo $this->em->getRepository(Brand::class)->find(1)->getBrandCars()->count()."\n";
-        $this->em->clear();
-        //echo $this->em->getRepository(Brand::class)->find(1)->getBrandCars()->count()."\n";
-        $audi = $this->em->getRepository(Brand::class)->find(2);
-        $this->em->remove($audi);
-        $this->em->flush();
-        //echo "\nDEL OK. QUERIES: ".count($stackLogger->queries);
-// CRUD = Create, Read, Update, Delete
-// TODO: CRUD SERVICE
-// Fat services, Skinny controllers
-        /*
-\xampp\php\php bin/console doctrine:schema:drop --force --full-database
-\xampp\php\php bin/console doctrine:database:create
-\xampp\php\php bin/console doctrine:schema:update --force
-\xampp\php\php bin/console doctrine:fixtures:load --no-interaction -vvv
-         */
+//        $project = new Project();
+//        $project->setProjectActive(true);
+//        $project->setProjectName('Facebook');
+//
+//
+//
+//        $ticket = new Ticket();
+//        $ticket->setTicketName('Create authentication');
+//        $ticket
     }
 
 }

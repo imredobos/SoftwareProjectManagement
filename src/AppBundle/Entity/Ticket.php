@@ -41,7 +41,7 @@ class Ticket
     private $ticket_startdate;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime", nullable=true)
      */
     private $ticket_enddate;
 
@@ -61,12 +61,12 @@ class Ticket
     private $ticket_assignee;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="integer")
      */
     private $ticket_estimatedtime;
 
     /**
-     * @ORM\Column(type="time")
+     * @ORM\Column(type="integer")
      */
     private $ticket_loggedtime;
 

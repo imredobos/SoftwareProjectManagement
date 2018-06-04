@@ -11,9 +11,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-//@Security("has_role('ROLE_USER')")
 /**
- *
+ * @Security("has_role('ROLE_USER')")
  */
 class DefaultController extends Controller
 {

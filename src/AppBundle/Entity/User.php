@@ -59,8 +59,7 @@ class User implements UserInterface, \Serializable
     private $user_project;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\User", mappedBy="ticket_assignee")
-     * @ORM\JoinColumn(name="user_ticket", referencedColumnName="ticket_id")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Ticket", mappedBy="ticket_assignee")
      */
     private $user_ticket;
 

@@ -30,36 +30,14 @@ class Worklog
     private $worklog_ticket;
 
     /**
-     * Get worklogId
-     *
-     * @return integer
+     * @ORM\Column(type="integer")
      */
-    public function getWorklogId()
-    {
-        return $this->worklog_id;
-    }
+    private $worklog_time;
 
     /**
-     * Set worklogTicket
-     *
-     * @param \AppBundle\Entity\Ticket $worklogTicket
-     *
-     * @return Worklog
+     * @ORM\Column(type="string")
      */
-    public function setWorklogTicket(\AppBundle\Entity\Ticket $worklogTicket = null)
-    {
-        $this->worklog_ticket = $worklogTicket;
+    private $worklog_comment;
 
-        return $this;
-    }
 
-    /**
-     * Get worklogTicket
-     *
-     * @return \AppBundle\Entity\Ticket
-     */
-    public function getWorklogTicket()
-    {
-        return $this->worklog_ticket;
-    }
 }

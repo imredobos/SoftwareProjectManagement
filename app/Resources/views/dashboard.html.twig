@@ -1,0 +1,9 @@
+{# @var projects \AppBundle\Entity\Project[] #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% for project in projects %}
+        <p>{{ project.projectName }}</p>
+    {% endfor %}
+{% endblock %}

@@ -56,7 +56,8 @@ class Ticket
     private $ticket_priority;
 
     /**
-     * @ORM\OneToOne(targetEntity="User", mappedBy="user_ticket")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="user_ticket")
+     * @ORM\JoinColumn(name="ticket_assignee", referencedColumnName="user_id")
      */
     private $ticket_assignee;
 
@@ -64,11 +65,6 @@ class Ticket
      * @ORM\Column(type="integer")
      */
     private $ticket_estimatedtime;
-
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $ticket_loggedtime;
 
     /**
      * @ORM\OneToMany(targetEntity="Worklog", mappedBy="worklog_ticket")
@@ -263,30 +259,6 @@ class Ticket
     public function setTicketEstimatedtime($ticketEstimatedtime)
     {
         $this->ticket_estimatedtime = $ticketEstimatedtime;
-
-        return $this;
-    }
-
-    /**
-     * Get ticketLoggedtime
-     *
-     * @return \DateTime
-     */
-    public function getTicketLoggedtime()
-    {
-        return $this->ticket_loggedtime;
-    }
-
-    /**
-     * Set ticketLoggedtime
-     *
-     * @param \DateTime $ticketLoggedtime
-     *
-     * @return Ticket
-     */
-    public function setTicketLoggedtime($ticketLoggedtime)
-    {
-        $this->ticket_loggedtime = $ticketLoggedtime;
 
         return $this;
     }

@@ -1,0 +1,42 @@
+{# @var projects \AppBundle\Entity\Project[] #}
+
+{% extends 'base/base.html.twig' %}
+{% block title %}
+    Project list
+{% endblock %}
+
+{% block body %}
+    <h1>List of Projects</h1>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Active</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr class="">
+                <td><a href="{{ path('projectshow', {'projectId': project.projectId}) }}">{{ project.projectName }}</a></td>
+                <td>{{ project.projectStartdate|date('Y.m.d.')  }}</td>
+                {% if project.projectEnddate %}
+                    <td>{{ project.projectEnddate|date('Y.m.d.') }}</td>
+                {% else %}
+                    <td>UNKNOWN</td>
+                {% endif %}
+                <td>{{ project.projectActive }}</td>
+                {% if is_granted("ROLE_ADMIN") %}
+                    <td><a href="{{ path('projectedit', {'projectId': project.projectId}) }}">Edit</a></td>
+                    <td><a href="{{ path('projectdel', {'projectId': project.projectId}) }}">Delete</a></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path('projectnew') }}"><button>
+            Create new project
+        </button></a>
+{% endblock %}

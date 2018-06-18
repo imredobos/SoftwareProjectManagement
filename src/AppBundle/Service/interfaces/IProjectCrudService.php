@@ -3,6 +3,7 @@
 namespace AppBundle\Service\interfaces;
 
 use AppBundle\Entity\Project;
+use AppBundle\Entity\User;
 use Symfony\Component\Form\FormInterface;
 
 interface IProjectCrudService
@@ -43,4 +44,10 @@ interface IProjectCrudService
      * @return FormInterface
      */
     public function getProjectForm($project);
+
+    /**
+     * @param $user User
+     * @return Project[]
+     */
+    public function findAllByUser($user);
 }

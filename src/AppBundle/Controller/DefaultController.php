@@ -42,8 +42,9 @@ class DefaultController extends Controller
      */
     public function dashboardAction(Request $request)
     {
-        $projects = $this->projectService->findAll();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+        $projects = $this->ticketService->getTicketsByUser($user);
         $twigParams = array("projects"=>$projects);
-        return $this->render('dashboard.html.twig', $twigParams);
+        return $this->render('dashboard/dashboard.html.twig', $twigParams);
     }
 }

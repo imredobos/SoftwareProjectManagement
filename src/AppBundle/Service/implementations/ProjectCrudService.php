@@ -7,6 +7,11 @@ use AppBundle\Service\CrudService;
 use AppBundle\Service\interfaces\IProjectCrudService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -37,20 +42,9 @@ class ProjectCrudService extends CrudService implements IProjectCrudService
      */
     public function delete($projectId)
     {
-        if ($this->exists($projectId)) {
-            $project = $this->find($projectId);
-            $this->em->remove($project);
-            $this->em->flush();
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function exists($projectId)
-    {
         $project = $this->find($projectId);
-        return ($project) ? true : false;
+        $this->em->remove($project);
+        $this->em->flush();
     }
 
     /**
@@ -67,6 +61,15 @@ class ProjectCrudService extends CrudService implements IProjectCrudService
     public function getRepo()
     {
         return $this->em->getRepository(Project::class);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function exists($projectId)
+    {
+        $project = $this->find($projectId);
+        return ($project) ? true : false;
     }
 
     /**
@@ -91,7 +94,27 @@ class ProjectCrudService extends CrudService implements IProjectCrudService
      */
     public function getProjectForm($project)
     {
-        // TODO: Implement getProjectForm() method.
+        $form = $this->formFactory->createBuilder(FormType::class, $project);
+        $form->add("project_name", TextType::class);
+        $form->add("project_enddate", DateType::class);
+        $form->add("project_active", ChoiceType::class, [
+            'choices' => array("YES" => true, "NO" => false)
+        ]);
+        $form->add("SAVE", SubmitType::class);
+        return $form->getForm();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findAllByUser($user)
+    {
+        $query = $this->em->createQuery("
+            SELECT p from AppBundle:Project p 
+            JOIN p.project_userproject u WHERE u.userproject_user = :userId
+        ");
+        $query->setParameter("userId", $user->getUserId());
+        return $query->getResult();
     }
 
 

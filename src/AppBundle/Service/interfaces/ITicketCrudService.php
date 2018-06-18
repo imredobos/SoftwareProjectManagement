@@ -2,7 +2,9 @@
 
 namespace AppBundle\Service\interfaces;
 
+use AppBundle\Entity\Project;
 use AppBundle\Entity\Ticket;
+use AppBundle\Entity\User;
 use Symfony\Component\Form\FormInterface;
 
 interface ITicketCrudService
@@ -40,7 +42,14 @@ interface ITicketCrudService
 
     /**
      * @param $ticket Ticket
+     * @param $project Project
      * @return FormInterface
      */
-    public function getTicketForm($ticket);
+    public function getTicketCreateForm($ticket, $project);
+
+    /**
+     * @param $users User[]
+     * @return Ticket[]
+     */
+    public function getTicketsByUser($users);
 }

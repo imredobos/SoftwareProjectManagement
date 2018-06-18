@@ -7,7 +7,14 @@ use AppBundle\Service\CrudService;
 use AppBundle\Service\interfaces\IUserCrudService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class UserCrudService extends CrudService implements IUserCrudService
@@ -91,6 +98,37 @@ class UserCrudService extends CrudService implements IUserCrudService
      */
     public function getUserForm($user)
     {
-        // TODO: Implement getUserForm() method.
+        // TODO
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getUserRegistrationForm($user)
+    {
+        $form = $this->formFactory->createBuilder(FormType::class, $user);
+//        $form->add('user_email', TextType::class);
+        $form->add('user_email', EmailType::class);
+        $form->add('plainPassword', RepeatedType::class, [
+           'type' => PasswordType::class,
+           'first_options' => [
+               'label' => 'Password',
+           ],
+            'second_options' => [
+                'label' => 'Repeated Password'
+            ]
+        ]);
+        $form->add('register', SubmitType::class);
+        return $form->getForm();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function findByEmail($email)
+    {
+        return $this->getRepo()->findOneBy(["user_mail"=>$email]);
+    }
+
+
 }

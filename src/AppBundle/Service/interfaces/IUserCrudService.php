@@ -43,4 +43,16 @@ interface IUserCrudService
      * @return FormInterface
      */
     public function getUserForm($user);
+
+    /**
+     * @param $user User
+     * @return FormInterface
+     */
+    public function getUserRegistrationForm($user);
+
+    /**
+     * @param $email string
+     * @return User
+     */
+    public function findByEmail($email);
 }

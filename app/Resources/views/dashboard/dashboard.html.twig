@@ -1,0 +1,27 @@
+{# @var projects \AppBundle\Entity\Ticket[] #}
+{% extends 'base/base.html.twig' %}
+{% block title %}
+    Dashboard
+{% endblock %}
+{% block body %}
+    <table>
+        <thead>
+            <th>Project name</th>
+            <th>Issue</th>
+            <th>Status</th>
+            <th>Priority</th>
+            <th>End date</th>
+        </thead>
+        <tbody>
+        {% for project in projects %}
+            <tr>
+                <td>{{ project.ticketProject.projectName }}</td>
+                <td>{{ project.ticketName }}</td>
+                <td>{{ project.ticketStatus }}</td>
+                <td>{{ project.ticketPriority }}</td>
+                <td>{{ project.ticketEnddate|date('Y.m.d. H:i:s') }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endblock %}

@@ -1,0 +1,60 @@
+{# @var project \AppBundle\Entity\Project #}
+{# @var tickets \AppBundle\Entity\Ticket[] #}
+{% extends 'base/base.html.twig' %}
+{% block title %}
+    Project
+{% endblock %}
+{% block body %}
+    <h2>Project details</h2>
+    <table>
+            <tr>
+                <td>Name: </td>
+                <td>{{ project.projectName }}</td>
+            </tr>
+        <tr>
+            <td>Start date: </td>
+            <td>{{ project.projectStartdate|date('Y.m.d. H:i:s') }}</td>
+        </tr>
+        <tr>
+            <td>End date: </td>
+            <td>{{ project.projectEnddate|date('Y.m.d. H:i:s') }}</td>
+        </tr>
+        <tr>
+            <td>Active: </td>
+            <td>{{ project.projectActive }}</td>
+        </tr>
+    </table>
+    <br/>
+    {% if is_granted("ROLE_ADMIN") or app.user.username == username %}
+    <a href="{{ path('projectedit', {'projectId': project.projectId}) }}"><button>
+            Edit project
+        </button></a>
+    <a href="{{ path('projectdel', {'projectId': project.projectId}) }}"><button>
+            Delete project
+        </button></a>
+    {% endif %}
+    <hr/>
+    <h2>Project tickets</h2>
+    <table>
+        <thead>
+            <th>Name</th>
+            <th>Assignee</th>
+            <th>Status</th>
+            <th>Priority</th>
+        </thead>
+        <tbody>
+            {% for ticket in tickets %}
+                <td>{{ ticket.ticketName }}</td>
+                <td>{{ ticket.ticketAssignee.username }}</td>
+                <td>{{ ticket.ticketStatus }}</td>
+                <td>{{ ticket.ticketPriority }}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+    <br/>
+    {% if is_granted("ROLE_ADMIN") %}
+    <a href="{{ path('ticketedit') }}"><button>
+            Add new ticket
+        </button></a>
+    {% endif %}
+{% endblock %}

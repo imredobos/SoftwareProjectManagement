@@ -232,4 +232,15 @@ class Project
     {
         return $this->project_ticket;
     }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function updateTimestamp()
+    {
+        if ($this->project_startdate == null)
+        {
+            $this->project_startdate = new \DateTime();
+        }
+    }
 }

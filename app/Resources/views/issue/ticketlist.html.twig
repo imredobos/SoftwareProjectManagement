@@ -1,0 +1,32 @@
+{# @var tickets \AppBundle\Entity\Ticket[] #}
+{% extends 'base/base.html.twig' %}
+{% block title %}
+    Issues list
+{% endblock %}
+{% block body %}
+    <h1>List of Issues</h1>
+    <br/>
+    <table>
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Assignee</th>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Priority</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ticket in tickets %}
+            <tr class="">
+                <td><a href="{{ path('ticketshow', {'ticketId': ticket.ticketId}) }}">{{ ticket.ticketName }}</a></td>
+                <td>{{ ticket.ticketAssignee.username }}</td>
+                <td><a href="{{ path('projectshow', {'projectId': ticket.ticketProject.projectId}) }}">{{ ticket.ticketProject.projectName }}</a></td>
+                <td>{{ ticket.ticketStatus }}</td>
+                <td>{{ ticket.ticketPriority }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ path('ticketcreate') }}"
+{% endblock %}

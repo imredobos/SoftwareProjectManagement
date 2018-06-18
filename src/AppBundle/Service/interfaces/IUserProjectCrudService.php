@@ -18,6 +18,16 @@ interface IUserProjectCrudService
     public function delete($userprojectId);
 
     /**
+     * @param $userId integer
+     */
+    public function deleteByUser($userId);
+
+    /**
+     * @param $projectId integer
+     */
+    public function deleteByProject($projectId);
+
+    /**
      * @param $userprojectId integer
      */
     public function exists($userprojectId);

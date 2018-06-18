@@ -1,0 +1,47 @@
+{# @var ticket \AppBundle\Entity\Ticket #}
+{% extends 'base/base.html.twig' %}
+{% block title %}
+    Issues
+{% endblock %}
+{% block body %}
+    <h2>Ticket description</h2>
+    <table>
+        <tr>
+            <td>Name: </td>
+            <td>{{ ticket.ticketName }}</td>
+        </tr>
+        <tr>
+            <td>Assignee: </td>
+            {% if ticket.ticketAssignee %}
+                <td>{{ ticket.ticketAssignee.username }}</td>
+            {% else %}
+                <td> - </td>
+            {% endif %}
+        </tr>
+        <tr>
+            <td>Description: </td>
+            <td>{{ ticket.ticketDescription }}</td>
+        </tr>
+        <tr>
+            <td>Start date</td>
+            <td>{{ ticket.ticketStartdate|date('Y.m.d. H:i:s') }}</td>
+        </tr>
+        <tr>
+            <td>End date</td>
+            <td>{{ ticket.ticketEnddate|date('Y.m.d. H:i:s') }}</td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td>{{ ticket.ticketStatus }}</td>
+        </tr>
+        <tr>
+            <td>Priority</td>
+            <td>{{ ticket.ticketPriority }}</td>
+        </tr>
+        <tr>
+            <td>Estimated time</td>
+            <td>{{ ticket.ticketEstimatedtime }}</td>
+        </tr>
+    </table>
+
+{% endblock %}

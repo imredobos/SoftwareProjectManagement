@@ -56,7 +56,7 @@ class DataLoader extends Fixture implements  FixtureInterface, ContainerAwareInt
     private function createUsers(){
         $user1 = new User();
         $user1->setUserEmail("user1@nik.com");
-        $user1->setUserPass("63e780c3f321d13109c71bf81805476e");
+        $user1->setUserPass("$2y$12$6MpOS7vXC9j0vZzBYi74cONrNdjK9XSQPtkxGzpmzRSEMl0me2QI2");
         $user1->setUserRegistered(new \DateTime());
         $user1->setUserGroup(Role::$ROLE_ADMIN);
         $this->em->persist($user1);
@@ -64,7 +64,7 @@ class DataLoader extends Fixture implements  FixtureInterface, ContainerAwareInt
 
         $user2 = new User();
         $user2->setUserEmail("user2@nik.com");
-        $user2->setUserPass("63e780c3f321d13109c71bf81805476e");
+        $user2->setUserPass("$2y$12$6MpOS7vXC9j0vZzBYi74cONrNdjK9XSQPtkxGzpmzRSEMl0me2QI2");
         $user2->setUserRegistered(new \DateTime());
         $user2->setUserGroup(Role::$ROLE_USER);
         $this->em->persist($user2);
@@ -72,7 +72,7 @@ class DataLoader extends Fixture implements  FixtureInterface, ContainerAwareInt
 
         $user3 = new User();
         $user3->setUserEmail("user3@nik.com");
-        $user3->setUserPass("63e780c3f321d13109c71bf81805476e");
+        $user3->setUserPass("$2y$12$6MpOS7vXC9j0vZzBYi74cONrNdjK9XSQPtkxGzpmzRSEMl0me2QI2");
         $user3->setUserRegistered(new \DateTime());
         $user3->setUserGroup(Role::$ROLE_USER);
         $this->em->persist($user3);

@@ -93,4 +93,42 @@ class UserProjectCrudService extends CrudService implements IUserProjectCrudServ
     {
         // TODO: Implement getUserProjectForm() method.
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteByUser($userId)
+    {
+        /**
+         * @var $items UserProject[]
+         */
+        $items = $this->getRepo()->findBy(["userproject_user"=>$userId]);
+        /**
+         * @var $val UserProject
+         */
+        foreach ($items as $val){
+            $this->em->remove($val);
+        }
+        $this->em->flush();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function deleteByProject($projectId)
+    {
+        /**
+         * @var $items UserProject[]
+         */
+        $items = $this->getRepo()->findBy(["userproject_project"=>$projectId]);
+        /**
+         * @var $val UserProject
+         */
+        foreach ($items as $val){
+            $this->em->remove($val);
+        }
+        $this->em->flush();
+    }
+
+
 }

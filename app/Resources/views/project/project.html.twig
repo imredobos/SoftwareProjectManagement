@@ -17,21 +17,32 @@
         </tr>
         <tr>
             <td>End date: </td>
-            <td>{{ project.projectEnddate|date('Y.m.d. H:i:s') }}</td>
+            {% if project.projectEnddate %}
+                <td>{{ project.projectEnddate|date('Y.m.d. H:i:s') }}</td>
+            {% else %}
+                <td>unknown</td>
+            {% endif %}
         </tr>
         <tr>
             <td>Active: </td>
-            <td>{{ project.projectActive }}</td>
+            {% if project.projectActive %}
+                <td>Yes</td>
+            {% else %}
+                <td>No</td>
+            {% endif %}
         </tr>
     </table>
     <br/>
-    {% if is_granted("ROLE_ADMIN") or app.user.username == username %}
+    {% if is_granted("ROLE_ADMIN")%}
     <a href="{{ path('projectedit', {'projectId': project.projectId}) }}"><button>
             Edit project
         </button></a>
     <a href="{{ path('projectdel', {'projectId': project.projectId}) }}"><button>
             Delete project
         </button></a>
+        <a href="{{ path('projectadduser', {'projectId': project.projectId}) }}"><button>
+                Add user
+            </button></a>
     {% endif %}
     <hr/>
     <h2>Project tickets</h2>
@@ -44,16 +55,23 @@
         </thead>
         <tbody>
             {% for ticket in tickets %}
-                <td>{{ ticket.ticketName }}</td>
-                <td>{{ ticket.ticketAssignee.username }}</td>
+                <tr>
+                <td><a href="{{ path('ticketshow', {'ticketId':ticket.ticketId}) }}">{{ ticket.ticketName }}</a></td>
+                {% if ticket.ticketAssignee %}
+                    <td>{{ ticket.ticketAssignee.username }}</td>
+                {% else %}
+                    <td> - </td>
+                {% endif %}
                 <td>{{ ticket.ticketStatus }}</td>
                 <td>{{ ticket.ticketPriority }}</td>
+                </tr>
+                <br/>
             {% endfor %}
         </tbody>
     </table>
     <br/>
     {% if is_granted("ROLE_ADMIN") %}
-    <a href="{{ path('ticketedit') }}"><button>
+    <a href="{{ path('ticketcreate') }}"><button>
             Add new ticket
         </button></a>
     {% endif %}

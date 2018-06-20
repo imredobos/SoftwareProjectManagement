@@ -1,0 +1,25 @@
+{# @var worklog \AppBundle\Entity\Worklog #}
+{% extends 'base/base.html.twig' %}
+{% block title %}
+    Worklog
+{% endblock %}
+{% block body %}
+    <h2>Worklog details:</h2>
+    <table>
+        <tr>
+            <td>Ticket:</td>
+            <td>{{ worklog.worklogTicket.ticketName }}</td>
+        </tr>
+        <tr>
+            <td>Comment:</td>
+            <td>{{ worklog.worklogComment }}</td>
+        </tr>
+        <tr>
+            <td>Logged time:</td>
+            <td>{{ worklog.worklogTime }}</td>
+        </tr>
+    </table>
+    <a href="{{ path('worklogedit', {'worklogId':worklog.worklogId}) }}"><button>Edit</button></a>
+    <a href="{{ path('worklogdel', {'worklogId':worklog.worklogId}) }}"><button>Delete</button></a>
+
+{% endblock %}

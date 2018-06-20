@@ -42,10 +42,17 @@ interface ITicketCrudService
 
     /**
      * @param $ticket Ticket
-     * @param $project Project
+     * @param $project Project[]
      * @return FormInterface
      */
     public function getTicketCreateForm($ticket, $project);
+
+    /**
+     * @param $ticket Ticket
+     * @param $users User[]
+     * @return FormInterface
+     */
+    public function getTicketEditForm($ticket, $users);
 
     /**
      * @param $users User[]

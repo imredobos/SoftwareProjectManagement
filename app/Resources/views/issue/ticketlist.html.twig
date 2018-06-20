@@ -20,7 +20,11 @@
         {% for ticket in tickets %}
             <tr class="">
                 <td><a href="{{ path('ticketshow', {'ticketId': ticket.ticketId}) }}">{{ ticket.ticketName }}</a></td>
-                <td>{{ ticket.ticketAssignee.username }}</td>
+                {% if ticket.ticketAssignee %}
+                    <td>{{ ticket.ticketAssignee.username }}</td>
+                {% else %}
+                    <td> - </td>
+                {% endif %}
                 <td><a href="{{ path('projectshow', {'projectId': ticket.ticketProject.projectId}) }}">{{ ticket.ticketProject.projectName }}</a></td>
                 <td>{{ ticket.ticketStatus }}</td>
                 <td>{{ ticket.ticketPriority }}</td>

@@ -1,4 +1,5 @@
 {# @var ticket \AppBundle\Entity\Ticket #}
+{# @var worklogs \AppBundle\Entity\Worklog[] #}
 {% extends 'base/base.html.twig' %}
 {% block title %}
     Issues
@@ -43,5 +44,28 @@
             <td>{{ ticket.ticketEstimatedtime }}</td>
         </tr>
     </table>
-
+    <a href="{{ path('ticketedit', {'ticketId': ticket.ticketId}) }}"><button>Edit</button></a>
+    <a href="{{ path('ticketdel', {'ticketId': ticket.ticketId}) }}"><button>Delete</button></a>
+    <br/>
+    <h2>Worklogs:</h2>
+    {% for worklog in worklogs %}
+        <table>
+            <tr>
+                <td>Comment: </td>
+                <td>{{ worklog.worklogComment }}</td>
+            </tr>
+            <tr>
+                <td>Logged time: </td>
+                <td>{{ worklog.worklogTime }}</td>
+            </tr>
+            <tr>
+                {% if is_granted("ROLE_ADMIN") or app.user.username == ticket.ticketAssignee.username %}
+                    <td align="center"><a href="{{ path('worklogedit', {'worklogId':worklog.worklogId }) }}"><button>Edit</button></a></td>
+                    <td align="center"><a href="{{ path('worklogdel', {'worklogId':worklog.worklogId }) }}"><button>Delete</button></a></td>
+                {% endif %}
+            </tr>
+        </table>
+        <hr/>
+    {% endfor %}
+    <a href="{{ path('worklogcreate', {'ticketId':ticket.ticketId}) }}"><button>Add new worklog</button></a>
 {% endblock %}

@@ -1,4 +1,5 @@
 <?php
+
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
@@ -9,9 +10,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class SecurityController extends  Controller
+class SecurityController extends Controller
 {
     /**
      * @var IUserCrudService
@@ -36,7 +36,7 @@ class SecurityController extends  Controller
 
         return $this->render('security/login.html.twig', array(
             'last_username' => $lastUsername,
-            'error'         => $error,
+            'error' => $error,
         ));
     }
 
@@ -45,23 +45,11 @@ class SecurityController extends  Controller
      */
     public function registerAction(Request $request)
     {
-
-//        $user = new UserDTO();
-//        $uname = $request->request->get("_username"); // TODO: filter_var
-//        $clearpass = $request->request->get("_password");
-//        $hashpass = $this->get('security.password_encoder')->encodePassword($user, $clearpass);
-//        $user->setUserEmail($uname);
-//        $user->setUserPass($hashpass);
-//        $user->setUserGroup("ADMIN");
-//        $this->getDoctrine()->getManager()->persist($user);
-//        $this->getDoctrine()->getManager()->flush();
-//        return $this->redirectToRoute("login");
-
         $user = new User();
         $form = $this->userService->getUserRegistrationForm($user);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $password = $this->get('security.password_encoder')
                 ->encodePassword(
                     $user,
@@ -88,6 +76,7 @@ class SecurityController extends  Controller
             'registration_form' => $form->createView()
         ]);
     }
+
     /**
      * @Route("/logout", name="logout")
      */

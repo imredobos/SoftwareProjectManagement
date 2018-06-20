@@ -25,9 +25,13 @@
                 {% if project.projectEnddate %}
                     <td>{{ project.projectEnddate|date('Y.m.d.') }}</td>
                 {% else %}
-                    <td>UNKNOWN</td>
+                    <td>unknown</td>
                 {% endif %}
-                <td>{{ project.projectActive }}</td>
+                {% if project.projectActive %}
+                    <td>Yes</td>
+                {% else %}
+                    <td>No</td>
+                {% endif %}
                 {% if is_granted("ROLE_ADMIN") %}
                     <td><a href="{{ path('projectedit', {'projectId': project.projectId}) }}">Edit</a></td>
                     <td><a href="{{ path('projectdel', {'projectId': project.projectId}) }}">Delete</a></td>

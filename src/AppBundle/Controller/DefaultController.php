@@ -9,7 +9,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Security("has_role('ROLE_USER')")
@@ -32,10 +31,9 @@ class DefaultController extends Controller
     public function setContainer(ContainerInterface $container = null)
     {
         parent::setContainer($container);
-        $this->projectService=$container->get('app.projectService');
-        $this->ticketService=$container->get('app.ticketService');
+        $this->projectService = $container->get('app.projectService');
+        $this->ticketService = $container->get('app.ticketService');
     }
-
 
     /**
      * @Route("/", name="dashboard")
@@ -44,7 +42,7 @@ class DefaultController extends Controller
     {
         $user = $this->get('security.token_storage')->getToken()->getUser();
         $projects = $this->ticketService->getTicketsByUser($user);
-        $twigParams = array("projects"=>$projects);
+        $twigParams = array("projects" => $projects);
         return $this->render('dashboard/dashboard.html.twig', $twigParams);
     }
 }

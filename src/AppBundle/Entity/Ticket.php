@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="tickets")
+ * @ORM\HasLifecycleCallbacks
  */
 class Ticket
 {
@@ -343,5 +344,16 @@ class Ticket
         $this->ticket_project = $ticketProject;
 
         return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     */
+    public function updateTimestamp()
+    {
+        if ($this->ticket_startdate == null)
+        {
+            $this->ticket_startdate = new \DateTime();
+        }
     }
 }

@@ -2,6 +2,8 @@
 
 namespace AppBundle\Service\interfaces;
 
+use AppBundle\Entity\Project;
+use AppBundle\Entity\User;
 use AppBundle\Entity\UserProject;
 use Symfony\Component\Form\FormInterface;
 
@@ -49,8 +51,15 @@ interface IUserProjectCrudService
     public function save($userproject);
 
     /**
+     * @param $project Project
+     * @return User[]
+     */
+    public function findUsersByProject($project);
+
+    /**
      * @param $userproject UserProject
+     * @param $users User
      * @return FormInterface
      */
-    public function getUserProjectForm($userproject);
+    public function getUserProjectForm($userproject, $users);
 }

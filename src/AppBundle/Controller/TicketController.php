@@ -2,18 +2,15 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Project;
 use AppBundle\Entity\Ticket;
-use AppBundle\Entity\User;
-use AppBundle\Entity\UserProject;
 use AppBundle\Service\interfaces\IProjectCrudService;
 use AppBundle\Service\interfaces\ITicketCrudService;
+use AppBundle\Service\interfaces\IUserProjectCrudService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
 class TicketController extends Controller
 {
@@ -28,6 +25,11 @@ class TicketController extends Controller
     private $projectService;
 
     /**
+     * @var IUserProjectCrudService
+     */
+    private $upService;
+
+    /**
      * @inheritDoc
      */
     public function setContainer(ContainerInterface $container = null)
@@ -35,6 +37,7 @@ class TicketController extends Controller
         parent::setContainer($container);
         $this->ticketService = $container->get('app.ticketService');
         $this->projectService = $container->get('app.projectService');
+        $this->upService = $container->get('app.userprojectService');
     }
 
     /**
@@ -78,7 +81,8 @@ class TicketController extends Controller
     /**
      * @Route("/ticketshow/{ticketId}", name="ticketshow")
      */
-    public function showAction(Request $request, $ticketId){
+    public function showAction(Request $request, $ticketId)
+    {
         $ticket = $this->ticketService->find($ticketId);
         $twigParams = array();
         $twigParams["ticket"] = $ticket;
@@ -93,7 +97,20 @@ class TicketController extends Controller
      */
     public function delAction(Request $request, $ticketId)
     {
+        /**
+         * @var $ticket Ticket
+         */
+        $ticket = $this->ticketService->find($ticketId);
+        $project = $ticket->getTicketProject();
+        if ($ticket) {
+            $this->ticketService->delete($ticket);
 
+            $this->addFlash('notice', "Ticket deleted");
+            return $this->redirectToRoute('projectshow', ['projectId'=>$project->getProjectId()]);
+        } else {
+            $this->addFlash('notice', "Ticket not found");
+            return $this->redirectToRoute('projectlist');
+        }
     }
 
     /**
@@ -102,32 +119,30 @@ class TicketController extends Controller
      */
     public function editAction(Request $request, $ticketId)
     {
-//        $session = new Session();
-//        $session->start();
-//        /**
-//         * @var $project Project
-//         */
-//        $project = $session->get('project');
-//        if ($ticketId) {
-//            $ticket = $this->ticketService->find($ticketId);
-//        } else {
-//            $ticket = new Ticket();
-//        }
-//        $users = array();
-//        if ($project){
-//            $form = $this->ticketService->getTicketForm($ticket, $project, $project->get);
-//        } else {
-//
-//        }
-        return $this->render('issue/ticketedit.html.twig');
+        /**
+         * @var $ticket Ticket
+         */
+        $ticket = $this->ticketService->find($ticketId);
+        $project = $ticket->getTicketProject();
+        $up = $project->getProjectUserproject();
+        $users = $this->upService->findUsersByProject($project);
+        $form = $this->ticketService->getTicketEditForm($ticket, $users);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->ticketService->save($ticket);
+            $this->addFlash('notice', 'Ticket edited');
+            return $this->redirectToRoute('ticketshow', array('ticketId'=>$ticket->getTicketId()));
+        }
+        return $this->render('issue/ticketedit.html.twig', ['form'=>$form->createView()]);
     }
 
     /**
      * @Route("ticketcreate/{projectId}", name="ticketcreate")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function createAction(Request $request, $projectId=0){
-        if ($projectId){
+    public function createAction(Request $request, $projectId = 0)
+    {
+        if ($projectId) {
             $project = $this->projectService->find($projectId);
         } else {
             $project = $this->projectService->findAll();
@@ -135,12 +150,12 @@ class TicketController extends Controller
         $ticket = new Ticket();
         $form = $this->ticketService->getTicketCreateForm($ticket, array($project));
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->ticketService->save($ticket);
             $this->addFlash('notice', 'Ticket created');
             return $this->redirectToRoute('ticketlist');
         }
         return $this->render('issue/ticketedit.html.twig',
-            ["form"=>$form->createView()]);
+            ["form" => $form->createView()]);
     }
 }

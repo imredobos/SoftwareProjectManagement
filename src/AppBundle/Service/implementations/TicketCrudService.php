@@ -12,6 +12,7 @@ use AppBundle\Service\CrudService;
 use AppBundle\Service\interfaces\ITicketCrudService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use const Grpc\CHANNEL_TRANSIENT_FAILURE;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -147,6 +148,46 @@ class TicketCrudService extends CrudService implements ITicketCrudService
                  */
                 return strtoupper($project->getProjectName());
             }
+        ));
+        $form->add("ticket_estimatedtime", IntegerType::class);
+        $form->add("Save", SubmitType::class);
+        return $form->getForm();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTicketEditForm($ticket, $users)
+    {
+        $form = $this->formFactory->createBuilder(FormType::class, $ticket);
+        $form->add("ticket_name", TextType::class);
+        $form->add("ticket_description", TextType::class);
+        $form->add("ticket_assignee", EntityType::class, array(
+            'class'=>User::class,
+            'choices'=>$users,
+            'choice_label' => function($user, $key, $value) {
+                /**
+                 * @var $user User
+                 */
+                return strtoupper($user->getUsername());
+            }
+        ));
+        $form->add("ticket_enddate", DateType::class);
+        $form->add("ticket_status", ChoiceType::class, array(
+            'choices' => array(
+                'New' => Status::$STATUS_NEW,
+                'Estimated' => Status::$STATUS_ESTIMATED,
+                'In Progress'=>Status::$STATUS_INPROGRESS,
+                'Testing' => Status::$STATUS_TEST,
+                'Done' =>Status::$STATUS_DONE
+            )
+        ));
+        $form->add("ticket_priority", ChoiceType::class, array(
+            'choices' => array(
+                'Low' => Priority::$PRIORITY_LOW,
+                'Medium' => Priority::$PRIORITY_MEDIUM,
+                'High'=>Priority::$PRIORITY_HIGH
+            )
         ));
         $form->add("ticket_estimatedtime", IntegerType::class);
         $form->add("Save", SubmitType::class);

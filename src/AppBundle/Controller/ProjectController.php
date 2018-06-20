@@ -3,7 +3,6 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Project;
-use AppBundle\Entity\Ticket;
 use AppBundle\Entity\UserProject;
 use AppBundle\Service\interfaces\IProjectCrudService;
 use AppBundle\Service\interfaces\ITicketCrudService;
@@ -14,8 +13,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 
+/**
+ * @Security("has_role('ROLE_USER')")
+ */
 class ProjectController extends Controller
 {
     /**
@@ -74,6 +75,24 @@ class ProjectController extends Controller
     }
 
     /**
+     * @Route("/projectadduser/{projectId}", name="projectadduser")
+     */
+    public function adduserAction(Request $request, $projectId){
+        $users = $this->userService->findAll();
+        $project = $this->projectService->find($projectId);
+        $up = new UserProject();
+        $form = $this->userprojectService->getUserProjectForm($up, $users);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $up->setUserprojectProject($project);
+            $this->userprojectService->save($up);
+            $this->addFlash('notice', 'User Added');
+            return $this->redirectToRoute('projectshow', ['projectId'=>$projectId]);
+        }
+        return $this->render('project/projectedit.html.twig', ["form" => $form->createView()]);
+    }
+
+    /**
      * @Route("/projectshow/{projectId}", name="projectshow")
      */
     public function showAction(Request $request, $projectId)
@@ -90,15 +109,12 @@ class ProjectController extends Controller
 
     /**
      * @Route("projectdel/{projectId}", name="projectdel")
+     * @Security("has_role('ROLE_ADMIN')")
      */
     public function delAction(Request $request, $projectId)
     {
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
-            throw $this->createAccessDeniedException();
-        }
-
         $project = $this->projectService->find($projectId);
-        if ($project){
+        if ($project) {
             $this->userprojectService->deleteByProject($project);
             $tickets = $project->getProjectTicket();
             foreach ($tickets as $ticket) {
@@ -108,7 +124,7 @@ class ProjectController extends Controller
             $this->projectService->delete($projectId);
             $this->addFlash('notice', "Project deleted");
             return $this->redirectToRoute('projectlist');
-        } else{
+        } else {
             $this->addFlash('notice', "Project not found");
             return $this->redirectToRoute('projectlist');
         }
@@ -118,33 +134,34 @@ class ProjectController extends Controller
      * @Route("projectedit/{projectId}", name="projectedit")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function editAction(Request $request, $projectId=0)
+    public function editAction(Request $request, $projectId)
     {
         $project = $this->projectService->find($projectId);
         $form = $this->projectService->getProjectForm($project);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->projectService->save($project);
             $this->addFlash('notice', 'Project edited');
             return $this->redirectToRoute('projectlist');
         }
-        return $this->render('project/projectedit.html.twig', ["form"=>$form->createView()]);
+        return $this->render('project/projectedit.html.twig', ["form" => $form->createView()]);
     }
 
     /**
      * @Route("projectnew", name="projectnew")
      * @Security("has_role('ROLE_ADMIN')")
      */
-    public function createAction(Request $request){
+    public function createAction(Request $request)
+    {
         $project = new Project();
         $form = $this->projectService->getProjectForm($project);
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid()) {
             $this->projectService->save($project);
             $this->addFlash('notice', 'Project created');
             return $this->redirectToRoute('projectlist');
         }
         return $this->render('project/projectedit.html.twig',
-            ["form"=>$form->createView()]);
+            ["form" => $form->createView()]);
     }
 }

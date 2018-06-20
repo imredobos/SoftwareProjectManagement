@@ -7,6 +7,10 @@ use AppBundle\Service\CrudService;
 use AppBundle\Service\interfaces\IWorklogCrudService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -91,6 +95,10 @@ class WorklogCrudService extends CrudService implements IWorklogCrudService
      */
     public function getWorklogForm($worklog)
     {
-        // TODO: Implement getWorklogForm() method.
+        $form = $this->formFactory->createBuilder(FormType::class, $worklog);
+        $form->add("worklog_comment", TextType::class);
+        $form->add("worklog_time", IntegerType::class);
+        $form->add("SAVE", SubmitType::class);
+        return $form->getForm();
     }
 }
